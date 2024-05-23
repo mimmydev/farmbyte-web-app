@@ -5,6 +5,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import AddProductForm from './AddProductForm';
 import Image from 'next/image';
+
 interface Product {
   id: number;
   name: string;
@@ -30,7 +31,24 @@ const ProductList: React.FC = () => {
   const handleAddProduct = (newProduct: Product) => {
     setProducts([...products, newProduct]);
   };
-  
+
+  const ProductImage = ({ src, alt }: { src: string; alt: string }) => {
+    const [imageUrl, setImageUrl] = useState(src);
+
+    return (
+      <Image
+        src={imageUrl}
+        alt={alt}
+        width={300}
+        height={300}
+        objectFit="cover"
+        className="rounded-lg p-4"
+        unoptimized={true}
+        onError={() => setImageUrl('/404-error.png')}
+      />
+    );
+  };
+
   return (
     <div className="container mx-auto">
       <AddProductForm onAddProduct={handleAddProduct} />
@@ -39,16 +57,7 @@ const ProductList: React.FC = () => {
         {products.map((product) => (
           <Link key={product.id} href={`/product/${product.id}`}>
             <div className="product-card bg-farm-beige border farm-tan rounded-lg p-4 shadow-md hover:bg-farm-light min-h-[400px] max-h-[500px]">
-            <Image
-              src={product.image}
-              alt={product.name}
-              width={300}
-              height={300}
-              objectFit="cover"
-              className="rounded-lg p-4"
-              // NOTE: This is not the best practice it's recommended to explicitly list the domains in next config but its an alternative for now
-              unoptimized={true}
-            />
+              <ProductImage src={product.image} alt={product.name} />
               <h2 className="text-lg font-semibold text-black">{product.name}</h2>
               <p className="text-gray-500">RM{product.price.toFixed(2)}</p>
             </div>
