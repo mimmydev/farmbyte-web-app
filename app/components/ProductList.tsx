@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 import AddProductForm from './AddProductForm';
-
+import Image from 'next/image';
 interface Product {
   id: number;
   name: string;
@@ -30,20 +30,29 @@ const ProductList: React.FC = () => {
   const handleAddProduct = (newProduct: Product) => {
     setProducts([...products, newProduct]);
   };
-
+  
   return (
     <div className="container mx-auto">
       <AddProductForm onAddProduct={handleAddProduct} />
       <h1 className="text-2xl font-bold mb-4 mt-12">Product List</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {products.map((product) => (
-          // <Link  href={`/product/${product.id}`}>
-            <div key={product.id} className="bg-white shadow-md rounded-lg p-4">
-              <img src={product.image} alt={product.name} className="w-full h-40 object-cover mb-2" />
+          <Link key={product.id} href={`/product/${product.id}`}>
+            <div className="product-card bg-farm-beige border farm-tan rounded-lg p-4 shadow-md hover:bg-farm-light min-h-[400px] max-h-[500px]">
+            <Image
+              src={product.image}
+              alt={product.name}
+              width={300}
+              height={300}
+              objectFit="cover"
+              className="rounded-lg p-4"
+              // NOTE: This is not the best practice it's recommended to explicitly list the domains in next config but its an alternative for now
+              unoptimized={true}
+            />
               <h2 className="text-lg font-semibold text-black">{product.name}</h2>
               <p className="text-gray-500">RM{product.price.toFixed(2)}</p>
             </div>
-          // </Link>
+          </Link>
         ))}
       </div>
     </div>
